@@ -16,12 +16,13 @@ public class Order {
     private int orderId;//订单ID
     private int userId;//用户ID
     private BigDecimal total;//订单总金额
-    private String timeOrder;//下单时间
+    private String timeOrder;//添加购物车时间
     private String orderType;//支付类型
     private int goodsId;//购买商品id
     private int goodsCount;//购买商品数量
     private BigDecimal goodsPrice;//购买商品单价
     private String goodsName;//商品名称
-
+    private BigDecimal totalMoney;//当前订单的总金额
+    private String payTimeOrder;//付款时间
 
 }

@@ -38,15 +38,19 @@ public class GoodsTypeDaoImpl implements GoodsTypeDao {
         goodsTypes.add(new GoodsType(1, 0, "食品", true, true));
         goodsTypes.add(new GoodsType(2, 1, "饼干", true, true));
         goodsTypes.add(new GoodsType(3, 1, "糖果", true, true));
-        goodsTypes.add(new GoodsType(4, 2, "夹心饼干", false, true));
-        goodsTypes.add(new GoodsType(5, 2, "酥脆饼干", false, true));
+        goodsTypes.add(new GoodsType(4, 2, "夹心饼干", false, false));
+        goodsTypes.add(new GoodsType(5, 2, "酥脆饼干", false, false));
         goodsTypes.add(new GoodsType(6, 3, "巧克力", false, true));
         goodsTypes.add(new GoodsType(7, 3, "口香糖", false, true));
         goodsTypes.add(new GoodsType(8, 0, "家电", true, true));
         goodsTypes.add(new GoodsType(9, 8, "电视", true, true));
         goodsTypes.add(new GoodsType(10, 8, "洗衣机", true, true));
-        goodsTypes.add(new GoodsType(11, 10, "滚筒洗衣机", false, true));
-        goodsTypes.add(new GoodsType(12, 10, "波轮洗衣机", false, true));
+        goodsTypes.add(new GoodsType(11, 10, "滚筒洗衣机", false, false));
+        goodsTypes.add(new GoodsType(12, 10, "波轮洗衣机", false, false));
+        goodsTypes.add(new GoodsType(13, 1, "水果", false, true));
+        goodsTypes.add(new GoodsType(14, 0, "手机", true, true));
+        goodsTypes.add(new GoodsType(15, 14, "国产手机", true, true));
+        goodsTypes.add(new GoodsType(16, 14, "国外手机", true, true));
         return goodsTypes;
     }
 

@@ -20,6 +20,8 @@ public class BuyDaoImpl implements BuyDao {
     Map<Integer, List<Order>> cart = new HashMap<>();
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     List<Goods> goodsList = GoodsDaoImpl.goodsList;
+    Map<Integer, List<List<Order>>> userOrders = new HashMap<>();
+    List<List<Order>> lists;
 
     public void insert(User user) {
         if (!cart.containsKey(user.getUserId())) {
@@ -29,7 +31,6 @@ public class BuyDaoImpl implements BuyDao {
         }
         Order order = null;
         boolean flag = true;
-        int a = 0;
         while (flag) {
             boolean exist = false;
             GoodsDaoImpl.findAll1();
@@ -54,7 +55,6 @@ public class BuyDaoImpl implements BuyDao {
                         for (int j = 0; j < orders.size(); j++) {
                             order = orders.get(j);
                             if (goodsId == order.getGoodsId()) {
-                                a = j;
                                 exist = true;
                             }
                         }
@@ -62,9 +62,9 @@ public class BuyDaoImpl implements BuyDao {
                     if (exist) {
 //                        user.setUserBalance(user.getUserBalance().subtract(total));
                         goods.setGoodsCount(goods.getGoodsCount() - count);
-                        orders.get(a).setGoodsCount(order.getGoodsCount() + count);
-                        orders.get(a).setTimeOrder(df.format(System.currentTimeMillis()));
-                        orders.get(a).setTotal(order.getTotal().add(total));
+                        order.setGoodsCount(order.getGoodsCount() + count);
+                        order.setTimeOrder(df.format(System.currentTimeMillis()));
+                        order.setTotal(order.getTotal().add(total));
                         System.out.println("向购物车添加" + count + "个<<" + goods.getGoodsName() + ">>成功1");
                     } else {
 //                        user.setUserBalance(user.getUserBalance().subtract(total));
@@ -115,7 +115,7 @@ public class BuyDaoImpl implements BuyDao {
                     for (int i = 0; i < goodsList.size(); i++) {
                         Goods goods = goodsList.get(i);
                         if (order.getGoodsId() == goods.getGoodsId()) {
-                            goodsList.get(i).setGoodsCount(order.getGoodsCount() + goods.getGoodsCount());
+                            goods.setGoodsCount(order.getGoodsCount() + goods.getGoodsCount());
 //                            user.setUserBalance(user.getUserBalance().add(order.getTotal()));
                         }
                     }
@@ -132,7 +132,7 @@ public class BuyDaoImpl implements BuyDao {
                         for (int j = 0; j < goodsList.size(); j++) {
                             Goods goods = goodsList.get(j);
                             if (goods.getGoodsId() == goodsId) {
-                                goodsList.get(j).setGoodsCount(order.getGoodsCount() + goods.getGoodsCount());
+                                goods.setGoodsCount(order.getGoodsCount() + goods.getGoodsCount());
 //                                user.setUserBalance(user.getUserBalance().add(order.getTotal()));
                             }
                         }
@@ -172,21 +172,23 @@ public class BuyDaoImpl implements BuyDao {
             }
         }
     }
-
     public void pay(User user) {
-        BigDecimal total = new BigDecimal(0);
+        BigDecimal totalMoney= new BigDecimal(0);
         findAll(user);
         orders = cart.get(user.getUserId());
+        if (orders == null || orders.size() == 0) {
+            return;
+        }
         System.out.println("是否要支付(y/n)");
         String input = scanner.next();
         if (!"y".equals(input)) {
             return;
         }
         for (Order order : orders) {
-            total = order.getTotal().add(total);
+            totalMoney = order.getTotal().add(totalMoney);
         }
-        int subtract = user.getUserBalance().subtract(total).intValue();
-        System.out.println("共需支付" + total + "元");
+        int subtract = user.getUserBalance().subtract(totalMoney).intValue();
+        System.out.println("共需支付" + totalMoney + "元");
         System.out.println("1.会员余额支付");
         System.out.println("2.现金支付");
         System.out.println("请选择：");
@@ -197,20 +199,65 @@ public class BuyDaoImpl implements BuyDao {
                     System.out.println("余额不足，你的余额为" + user.getUserBalance() + "元，还差" + Math.abs(subtract) + "元");
                     break;
                 }
-                user.setUserBalance(user.getUserBalance().subtract(total));
+                user.setUserBalance(user.getUserBalance().subtract(totalMoney));
                 System.out.println("支付成功，你剩余的余额为"+user.getUserBalance()+"元");
                 for (Order order : orders) {
                     order.setOrderType("会员余额支付");
+                    order.setTotalMoney(totalMoney);
+                    order.setPayTimeOrder(df.format(System.currentTimeMillis()));
+                }
+                if (userOrders.get(user.getUserId())!=null&&!userOrders.get(user.getUserId()).isEmpty()){
+                    lists = userOrders.get(user.getUserId());
+                }else {
+                    lists = new ArrayList<>();
+                }
+                lists.add(new ArrayList<>(orders));
+                if (userOrders.get(user.getUserId())==null){
+                    userOrders.put(user.getUserId(),lists);
+                }else {
+                    userOrders.replace(user.getUserId(),lists);
                 }
                 orders.clear();
                 break;
             case "2" :
                 for (Order order : orders) {
                     order.setOrderType("现金支付");
+                    order.setTotalMoney(totalMoney);
+                    order.setPayTimeOrder(df.format(System.currentTimeMillis()));
                 }
                 System.out.println("现金支付成功");
+                if (userOrders.get(user.getUserId())!=null&&!userOrders.get(user.getUserId()).isEmpty()){
+                    lists = userOrders.get(user.getUserId());
+                }else {
+                    lists = new ArrayList<>();
+                }
+                lists.add(new ArrayList<>(orders));
+                if (userOrders.get(user.getUserId())==null){
+                    userOrders.put(user.getUserId(),lists);
+                }else {
+                    userOrders.replace(user.getUserId(),lists);
+                }
                 orders.clear();
         }
 
+    }
+    public void findAllUserOrders(User user) {
+        if (userOrders.get(user.getUserId())!=null&&!userOrders.get(user.getUserId()).isEmpty()){
+            lists = userOrders.get(user.getUserId());
+        }else {
+            System.out.println("暂无订单信息");
+            return;
+        }
+        int orderId = 0;
+        System.out.println("订单ID\t用户ID\t用户姓名\t购买商品名称\t购买商品数量\t总金额\t支付类型\t\t下单时间");
+        for (List<Order> list : lists) {
+            ++orderId;
+            System.out.println("-------------------------------------------------------------");
+            for (Order order : list) {
+                System.out.println("\t"+orderId+"\t\t"+order.getUserId()+"\t"+user.getUserName()+"\t\t"+
+                        order.getGoodsName()+"\t\t\t"+order.getGoodsCount()+
+                        "\t\t"+order.getTotal()+"\t"+order.getOrderType()+"\t\t"+order.getPayTimeOrder());
+            }
+        }
     }
 }

@@ -98,6 +98,9 @@ public class Main {
                 case "4":
                     buy();
                     break;
+                case "5":
+                    buyDaoImpl.findAllUserOrders(user);
+                    break;
                 case "6" :
                     System.out.println("谢谢使用");
                     System.exit(1);
@@ -231,7 +234,8 @@ public class Main {
                     buyDaoImpl.insert(user);
                     break;
                 case "2" :
-                    userDao.update();
+                    System.out.println("无法修改，请删除后再添加");
+//                    userDao.update();
                     break;
                 case "3" :
                     buyDaoImpl.delete(user);
@@ -243,7 +247,7 @@ public class Main {
                     buyDaoImpl.pay(user);
                     break;
                 case "6" :
-                    System.out.println(user);
+                    userDao.findByID(user);
                     break;
                 case "7" :
                     System.out.println("谢谢使用");

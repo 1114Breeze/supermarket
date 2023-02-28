@@ -20,17 +20,18 @@ public class UserDaoImpl implements UserDao {
     public static List<User> users = new ArrayList<>();
     Scanner scanner = new Scanner(System.in);
     int userId;
+
     @Override
     public void insert() {
-        if (users.size()==0){
+        if (users.size() == 0) {
             userId = 0;
-        }else {
-            userId=users.get(users.size() - 1).getUserId();
+        } else {
+            userId = users.get(users.size() - 1).getUserId();
         }
         System.out.println("请输入会员名称");
         String userName = scanner.next();
         for (User user : users) {
-            if (userName.equals(user.getUserName())){
+            if (userName.equals(user.getUserName())) {
                 System.out.println("已有此会员，请重新输入");
                 return;
             }
@@ -46,7 +47,7 @@ public class UserDaoImpl implements UserDao {
         BigDecimal userBalance = scanner.nextBigDecimal();
         users.add(new User().setUserId(++userId).setUserName(userName).setUserPassword(userPassword).
                 setUserTel(userTel).setUserPoints(userPoints).setUserBalance(userBalance));
-        System.out.println("添加<<"+userName+">>成功");
+        System.out.println("添加<<" + userName + ">>成功");
 
     }
 
@@ -57,32 +58,33 @@ public class UserDaoImpl implements UserDao {
         int userId = scanner.nextInt();
         for (int i = 0; i < users.size(); i++) {
             User user = users.get(i);
-            if (userId==user.getUserId()){
+            if (userId == user.getUserId()) {
                 users.remove(i);
-                System.out.println("删除<<"+user.getUserName()+">>成功");
+                System.out.println("删除<<" + user.getUserName() + ">>成功");
             }
         }
     }
+
     @Override
     public void update() {
         findAll();
         System.out.println("请输入要修改的会员编号");
         int userId = scanner.nextInt();
         for (User user : users) {
-            if (user.getUserId()==userId) {
-                while (true){
+            if (user.getUserId() == userId) {
+                while (true) {
                     System.out.println("|会员编号|  会员名称  |  会员联系方式  | 积分 | 余额 |");
-                    System.out.print("\t"+user.getUserId());
-                    System.out.print("\t\t"+user.getUserName());
-                    System.out.print("\t\t"+user.getUserTel());
-                    System.out.print("\t\t"+user.getUserPoints());
-                    System.out.println("\t"+user.getUserBalance());
+                    System.out.print("\t" + user.getUserId());
+                    System.out.print("\t\t" + user.getUserName());
+                    System.out.print("\t\t" + user.getUserTel());
+                    System.out.print("\t\t" + user.getUserPoints());
+                    System.out.println("\t" + user.getUserBalance());
                     System.out.println("1.修改会员名称");
                     System.out.println("2.修改会员联系方式");
                     System.out.println("3.修改会员积分");
                     System.out.println("4.修改会员余额");
                     System.out.println("0.修改完毕");
-                    String input = InputUtil.input("^[0-4]$","选择你要修改的属性");
+                    String input = InputUtil.input("^[0-4]$", "选择你要修改的属性");
                     switch (input) {
                         case "1":
                             System.out.println("输入修改后的会员名称");
@@ -109,12 +111,12 @@ public class UserDaoImpl implements UserDao {
                             System.out.println("修改成功");
                             break;
                         case "0":
-                            System.out.println("修改<<"+user.getUserName()+">>完毕");
+                            System.out.println("修改<<" + user.getUserName() + ">>完毕");
                             return;
                     }
                 }
 
-}
+            }
         }
     }
 
@@ -122,23 +124,33 @@ public class UserDaoImpl implements UserDao {
     public void findAll() {
         System.out.println("|会员编号|    会员名称    |  会员联系方式  | 积分 | 余额 |");
         for (User user : users) {
-            System.out.print("\t"+user.getUserId());
-            System.out.print("\t\t"+user.getUserName());
-            System.out.print("\t\t"+user.getUserTel());
-            System.out.print("\t\t"+user.getUserPoints());
-            System.out.println("\t"+user.getUserBalance());
+            System.out.print("\t" + user.getUserId());
+            System.out.print("\t\t" + user.getUserName());
+            System.out.print("\t\t" + user.getUserTel());
+            System.out.print("\t\t" + user.getUserPoints());
+            System.out.println("\t\t" + user.getUserBalance());
         }
     }
-    public void recharge(){
+
+    public void findByID(User user) {
+        System.out.println("|会员编号|    会员名称    |  会员联系方式  | 积分 | 余额 |");
+        System.out.print("\t" + user.getUserId());
+        System.out.print("\t\t" + user.getUserName());
+        System.out.print("\t\t" + user.getUserTel());
+        System.out.print("\t\t" + user.getUserPoints());
+        System.out.println("\t\t" + user.getUserBalance());
+    }
+
+    public void recharge() {
         findAll();
         System.out.println("选择你要充值的会员编号");
         int userId = scanner.nextInt();
         for (User user : users) {
-            if (user.getUserId()==userId){
-                System.out.println("输入你要为<<"+user.getUserName()+">>充值的金额");
+            if (user.getUserId() == userId) {
+                System.out.println("输入你要为<<" + user.getUserName() + ">>充值的金额");
                 BigDecimal recharge = scanner.nextBigDecimal();
                 user.setUserBalance(recharge.add(user.getUserBalance()));
-                System.out.println("已为<<"+user.getUserName()+">>充值"+recharge+"元,拥有余额为"+user.getUserBalance());
+                System.out.println("已为<<" + user.getUserName() + ">>充值" + recharge + "元,拥有余额为" + user.getUserBalance());
             }
         }
     }

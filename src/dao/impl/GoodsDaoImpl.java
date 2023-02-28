@@ -24,8 +24,11 @@ public class GoodsDaoImpl implements GoodsDao {
 
     public static List<Goods> initialize() {
         List<Goods> goodsList = new ArrayList<Goods>();
-        goodsList.add(new Goods().setGoodsId(1).setGoodsName("测试").setGoodsPrice(1).setGoodsCount(100).setGoodsStatus(1).setGoodsTypeId(1).setDiscount(10));
-        goodsList.add(new Goods().setGoodsId(2).setGoodsName("测试1").setGoodsPrice(10).setGoodsCount(1000).setGoodsStatus(1).setGoodsTypeId(2).setDiscount(10));
+        goodsList.add(new Goods().setGoodsId(1).setGoodsName("苹果").setGoodsPrice(1).setGoodsCount(500).setGoodsStatus(1).setGoodsTypeId(13).setDiscount(10));
+        goodsList.add(new Goods().setGoodsId(2).setGoodsName("香蕉").setGoodsPrice(2).setGoodsCount(1000).setGoodsStatus(1).setGoodsTypeId(13).setDiscount(10));
+        goodsList.add(new Goods().setGoodsId(3).setGoodsName("橘子").setGoodsPrice(3).setGoodsCount(1500).setGoodsStatus(1).setGoodsTypeId(13).setDiscount(5));
+        goodsList.add(new Goods().setGoodsId(4).setGoodsName("华为手机").setGoodsPrice(100).setGoodsCount(300).setGoodsStatus(1).setGoodsTypeId(15).setDiscount(5));
+        goodsList.add(new Goods().setGoodsId(5).setGoodsName("苹果手机").setGoodsPrice(200).setGoodsCount(800).setGoodsStatus(1).setGoodsTypeId(16).setDiscount(10));
         return goodsList;
     }
     @Override
